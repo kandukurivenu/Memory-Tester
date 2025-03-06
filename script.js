@@ -18,38 +18,31 @@ const countdownTimer = document.getElementById('countdown-timer');
 
 let userNote = '';
 let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-
-// Start Challenge
 startBtn.addEventListener('click', () => {
   switchSection('input-section');
 });
-
-// Submit Memory Input
 submitBtn.addEventListener('click', () => {
-  userNote = memoryInput.value.trim() || messageSelect.value; // Use custom message or pre-written message
+  userNote = memoryInput.value.trim() || messageSelect.value;
   if (userNote) {
-    memoryInput.style.opacity = '0'; // Fade out the input
+    memoryInput.style.opacity = '0'; 
     setTimeout(() => {
-      switchSection('distraction-mode'); // Move to Distraction Mode
-      startDistractionPhase(userNote); // Start the distraction phase with dynamic timer
+      switchSection('distraction-mode'); 
+      startDistractionPhase(userNote); 
     }, 500); // Delay for smooth transition
   } else {
     alert('Please enter or select a message to remember!');
   }
 });
 
-// Start Distraction Phase with Dynamic Timer
 function startDistractionPhase(note) {
   const wordCount = note.split(' ').length;
   let timerDuration;
-
-  // Set timer based on word count
   if (wordCount <= 5) {
-    timerDuration = 10; // 10 seconds for short sentences
+    timerDuration = 10; 
   } else if (wordCount <= 10) {
-    timerDuration = 15; // 15 seconds for medium sentences
+    timerDuration = 15; 
   } else {
-    timerDuration = 20; // 20 seconds for long sentences
+    timerDuration = 20; 
   }
 
   let timeLeft = timerDuration;
@@ -61,9 +54,9 @@ function startDistractionPhase(note) {
 
     if (timeLeft <= 0) {
       clearInterval(countdown);
-      switchSection('recall-section'); // Move to Recall Section after timer ends
+      switchSection('recall-section'); 
     }
-  }, 1000); // Update every second
+  }, 1000); 
 }
 
 // Submit Recall
@@ -78,7 +71,6 @@ recallSubmitBtn.addEventListener('click', () => {
   }
 });
 
-// Compare Notes and Calculate Score
 function compareNotes(original, recall) {
   originalNote.textContent = `Original Note: ${original}`;
   recallNote.textContent = `Your Recall: ${recall}`;
@@ -98,15 +90,12 @@ function compareNotes(original, recall) {
   return similarity;
 }
 
-// Calculate Similarity (Basic Implementation)
 function calculateSimilarity(str1, str2) {
   const words1 = str1.split(' ');
   const words2 = str2.split(' ');
   const matches = words1.filter(word => words2.includes(word)).length;
   return Math.round((matches / words1.length) * 100);
 }
-
-// Update Leaderboard
 function updateLeaderboard(score) {
   leaderboard.push(score);
   leaderboard.sort((a, b) => b - a);
@@ -120,14 +109,10 @@ function renderLeaderboard() {
     .map((score, index) => `<li>${index + 1}. ${score}%</li>`)
     .join('');
 }
-
-// Switch Sections
 function switchSection(sectionId) {
   sections.forEach(section => section.classList.remove('active'));
   document.getElementById(sectionId).classList.add('active');
 }
-
-// Event Listeners
 tryAgainBtn.addEventListener('click', () => {
   switchSection('input-section');
   memoryInput.value = '';
@@ -142,8 +127,6 @@ viewLeaderboard.addEventListener('click', () => {
 backToHome.addEventListener('click', () => {
   switchSection('landing');
 });
-
-// Progress Bar Animation
 memoryInput.addEventListener('input', () => {
   const progress = (memoryInput.value.length / 100) * 100;
   progressBar.style.width = `${progress}%`;
